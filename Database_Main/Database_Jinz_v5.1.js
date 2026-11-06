@@ -17207,7 +17207,7 @@ const DatabaseAPI_ACU = {
       const knownForms = [...new Set(knownNames.flatMap(nameForms))];
       const vocab = new Set(knownForms);
       rows.forEach(r => { splitWords(r.related).forEach(w => vocab.add(w)); splitWords(r.place).forEach(w => vocab.add(w)); });
-      // 含這個詞、但不是同一個名字的較長詞（「伊蕾拉」之於「蕾拉」）；全名「莉潔爾·烏列斯」之於「莉潔爾」不算
+      // 含這個詞、但不是同一個名字的較長詞（「伊蕾拉」之於「蕾拉」）；用「·」連起來的全名（「名·姓」）之於「名」不算
       const longerCache = new Map();
       const longerOf = w => {
           if (!longerCache.has(w)) {
