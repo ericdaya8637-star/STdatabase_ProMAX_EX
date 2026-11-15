@@ -3243,17 +3243,25 @@ function createRecallCore322() {
       '- 列11: 最新進展 - 60字內，這條線最新一次的結果。',
       '- 列12: 可能方向 - 一句話寫接下來可能怎麼發展；只寫可能，不寫確定的劇情，也不預測與{{user}}同場角色的反應。',
       '- 列13: 相關條目 - 這條線牽涉的組織、地點、設定在世界書裡的條目名稱，用頓號分隔；人物寫在主導角色、參與者，這裡不寫；用來確保之後載入正確的設定。',
-      '- 列14: 最後更新時間 - 這條線最後一次變化的劇情時間，格式 YYYY-MM-DD HH:mm。',
-      '- 列15: 下次推進 - 預計下一次有變化的劇情時間，格式 YYYY-MM-DD HH:mm。',
+      '- 列14: 最後更新時間 - 這條線最後一次變化的劇情時間＝經過裡最後一點的時間，格式 YYYY-MM-DD HH:mm；不得晚於現在的劇情時間。',
+      '- 列15: 下次推進 - 這條線下一次會有變化的劇情時間，格式 YYYY-MM-DD HH:mm；不得早於最後更新時間。',
       '- 列16: 期限 - 必然交會的時間點，或這件事的截止時間，格式 YYYY-MM-DD HH:mm；沒有填「無」。',
-      '- 列17: 與主角的關聯 - 30字內，這條線怎麼接上{{user}}的故事（認識的人、去過或要去的地方、進行中的任務）。',
+      '- 列17: 與主角的關聯 - 30字內，這條線怎麼接上{{user}}的故事（認識的人、去過或要去的地方、進行中的任務、以前事件的後續）。',
     ].join('\n'),
-    initNode: '回覆裡已經有 <parallel_line> 的（主模型開的第一條線），先照那段建成一條：線名自己取，主導角色、參與者、地點照那段。再依「平行線設定」的最少條數補新線；沒有合適人選時可以少建。新線規則同 Insert Trigger。',
+    initNode: '回覆裡已經有 <parallel_line> 的（主模型開的第一條線），先照那段建成一條：線名自己取，主導角色、參與者、地點照那段。再依「平行線設定」的最少條數補新線，補的線裡至少一條是世界其他地方的事；沒有合適人選時可以少建。新線規則同 Insert Trigger。',
     insertNode: [
       '- 回覆裡的 <parallel_line> 如果是表格還沒有的線（主模型開的第一條線），照那段新增成一列；進行中的線仍不得超過最多條數。',
-      '- 其他時候，只在進行中的線少於「平行線設定」的最少條數，或出現跟{{user}}故事有強烈關聯的新動向時才新增；進行中的線不得超過最多條數。',
-      '- 新線的主導角色依跟{{user}}目前劇情的關聯強弱挑選：跟{{user}}進行中的任務、主線衝突、要去的地方或身邊的人有關，包括{{user}}還沒見過、藏在暗處推動事件的對手或勢力。以世界書有登錄的角色與勢力為主，不憑空捏造重要角色。關聯越強越優先；關聯差不多時，優先挑最近幾條線沒當過主導的角色或勢力（換個視角）。主線相關的線一律保留，不被替換。',
-      '- 新線從「萌芽」開始，狀態填「進行中」，最後更新時間填現在的劇情時間；下次推進也填現在的劇情時間，建好下一回合就能演。',
+      '- 其他時候，只在下面兩種情況新增；進行中的線不得超過最多條數，每次填表最多新增一條：',
+      '  1. 進行中的線少於「平行線設定」的最少條數，或出現跟{{user}}故事有強烈關聯的新動向。',
+      '  2. 進行中的線全都圍著{{user}}眼前的事（進行中的任務、作戰、約好的行程），沒有一條是世界其他地方的事。',
+      '  3. 紀要、重要記憶裡記著跟{{user}}對立的一方（對手或可疑的勢力），但進行中的線裡沒有一條是從他們那邊看的。',
+      '- 世界其他地方的事：優先接紀要、重要記憶、角色表裡沒有下文的事（人物離場後去做的事、被送去治療或處理的事、說好之後再辦的事），其次是{{user}}去過或認識的勢力內部自己的事。這種線的主導角色挑那件事的當事人，「與主角的關聯」寫間接的關聯（認識的人、以前事件的後續）。',
+      '- 對立一方的線：主導角色寫那個對手或勢力（身分還沒揭露的，照「主導角色」欄位的說明寫），寫他們自己的行動與盤算。',
+      '- 圍著{{user}}眼前的事的線，主導角色依跟{{user}}目前劇情的關聯強弱挑選：跟{{user}}進行中的任務、主線衝突、要去的地方或身邊的人有關，包括{{user}}還沒見過、藏在暗處推動事件的對手或勢力。',
+      '- 兩種線都以紀要、重要記憶、角色表有記錄，或世界書有登錄的角色與勢力為主，不憑空捏造重要角色。關聯差不多時，優先挑最近幾條線沒當過主導的角色或勢力（換個視角）。主線相關的線一律保留，不被替換。',
+      '- 新線的階段照它實際進行到哪：才剛出現動機的從「萌芽」開始；紀要、重要記憶、角色表裡已經在做的事，照記錄的進度填。狀態填「進行中」。',
+      '- 建立時可以補上這件事開始以來、{{user}}不在場時的經過：每一點都要接在那些人最後一次被記錄的行動之後，不得跟紀要、重要記憶、角色表、正文矛盾，也不得晚於現在的劇情時間。最後更新時間＝經過裡最後一點的時間。',
+      '- 下次推進填這條線下一次會有變化的劇情時間（可以是現在）。',
     ].join('\n'),
     updateNode: [
       '- 先讀本次處理的所有回覆（可能不只一樓）：<parallel_line> 演出的結果寫回那條線，更新最新進展、經過、階段、知情者、地點、最後更新時間、下次推進。',
@@ -3261,7 +3269,7 @@ function createRecallCore322() {
       '- {{user}}跟這條線有了接觸（同場、通訊，或親手收到它的結果）→ 階段改成「交會」，{{user}}加入知情者；接觸結束後這條線若繼續自己發展，改回「演變」。',
       '- 交會之後重寫交會條件與期限：之後還會再主動找{{user}}才寫「必然」並給新的期限，否則改成「可能」或「無」。',
       '- 進行中的線超過「平行線設定」的最多條數時（例如中途把上限調低），不開新線，讓跟{{user}}最不相關的線往收尾發展，邏輯上結束時改成「結束」；不得直接刪除或硬把線寫死。',
-      '- 每條線都要往一個結果走（成功、失敗或轉變），不要原地踏步；主線相關以外、已經寫不出新進展，或跟{{user}}目前的故事失去關聯的線，往收尾發展，邏輯上結束時改成「結束」，空出來的位置再照 Insert Trigger 開新線。',
+      '- 每條線都要往一個結果走（成功、失敗或轉變），不要原地踏步；主線相關以外、已經寫不出新進展，或跟{{user}}的故事連間接關聯都沒有了的線，往收尾發展，邏輯上結束時改成「結束」，空出來的位置再照 Insert Trigger 開新線。',
       '- 平行線的時間不得晚於正文本回合的結束時間；同一條線的時間必須晚於它的最後更新時間。',
       '- 線名、起因不得改寫；結束的線不再推進。',
       '- 不得把平行線寫成{{user}}知道的事，也不得預測與{{user}}同場角色的反應。',
@@ -3623,6 +3631,11 @@ function createRecallCore322() {
       logWarn_ACU('[平行線] 注入失敗:', e);
     }
   }
+  // 這回合的回覆收到或被停止之後：其他腳本再觸發世界書掃描時，不再重算注入、不改那一樓的紀錄、不開平行線條目
+  // （紀錄要留著當時送出的那一份；填表更新之後的狀態等下一回合）
+  function endParallelTurn_ACU() {
+    parallelInjectionAllowed_ACU = false;
+  }
   // 世界書掃描時重算一次：事件導演在 GENERATION_AFTER_COMMANDS 才決定交會，比 GENERATION_STARTED 晚；
   // 酒館組提示詞在掃描之後，所以這時的內容才是送出去的那份，也跟這時打開的條目一致。
   function refreshParallelInjection_ACU() {
@@ -3784,6 +3797,77 @@ function createRecallCore322() {
     const s = getParallelSettings_ACU();
     const now = getParallelNow_ACU(sceneEnd);
     return `  - ★ 平行線設定：進行中的線最少 ${s.minLines} 條、最多 ${s.maxLines} 條；現在的劇情時間：${now.text || '未知（以回覆裡的時間為準）'}。\n`;
+  }
+  // 填表套用後、存檔前：照這批存檔樓層的劇情時間檢查平行線紀錄表，只修機械性的錯（修了會提示）：
+  // - 經過裡晚於現在的點拿掉（還沒發生）；每一點都有時間時，照時間先後排好
+  // - 最後更新時間不得晚於現在，也不得早於經過裡最新的一點
+  // - 下次推進不得早於最後更新時間（早了就改成最後更新時間，當作已到期）
+  // 回覆裡的平行線標頭時間晚於這一樓的結束時間，只提醒（正文不動）
+  function normalizeParallelTimes_ACU(sceneEnd) {
+    try {
+      const key = getParallelSheetKey_ACU();
+      const sheet = key ? currentJsonTableData_ACU?.[key] : null;
+      if (!sheet || !Array.isArray(sheet.content) || sheet.content.length < 2) return [];
+      const now = getParallelNow_ACU(sceneEnd);
+      if (now.ms === null) return [];
+      const nowDate = new Date(now.ms);
+      const pad = n => String(n).padStart(2, '0');
+      const fmt = ms => { const d = new Date(ms); return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`; };
+      // 經過的點只有「MM-DD HH:mm」：年份照現在；跨年時（點的月份比現在大又晚於現在）算前一年
+      const pointTime = text => {
+        const m = String(text).match(/^\s*(\d{1,2})\s*[-\/月]\s*(\d{1,2})\s*日?\s+(\d{1,2})\s*[:：]\s*(\d{2})/);
+        if (!m) return null;
+        let ms = Date.UTC(nowDate.getUTCFullYear(), +m[1] - 1, +m[2], +m[3], +m[4]);
+        if (ms > now.ms && +m[1] > nowDate.getUTCMonth() + 1) ms = Date.UTC(nowDate.getUTCFullYear() - 1, +m[1] - 1, +m[2], +m[3], +m[4]);
+        return ms;
+      };
+      const head = (sheet.content[0] || []).slice(1).map(h => String(h ?? '').trim());
+      const col = name => head.indexOf(name) + 1; // content 每列第 0 格是 null
+      const cName = col('線名'), cPast = col('經過'), cLast = col('最後更新時間'), cNext = col('下次推進');
+      if (cName <= 0 || cPast <= 0 || cLast <= 0) return [];
+      const fixes = [];
+      sheet.content.slice(1).forEach(row => {
+        const name = Array.isArray(row) ? String(row[cName] ?? '').trim() : '';
+        if (!name) return;
+        const changes = [];
+        let latestPoint = null;
+        const points = String(row[cPast] ?? '').split(/[；;]/).map(s => s.trim()).filter(Boolean);
+        if (points.length) {
+          const parsed = points.map((text, i) => ({ text, i, ms: pointTime(text) }));
+          const kept = parsed.filter(p => p.ms === null || p.ms <= now.ms);
+          if (kept.length < parsed.length) changes.push(`拿掉晚於現在的經過 ${parsed.length - kept.length} 點`);
+          const timed = kept.every(p => p.ms !== null);
+          const ordered = timed ? [...kept].sort((a, b) => a.ms - b.ms || a.i - b.i) : kept;
+          if (timed && ordered.some((p, i) => p !== kept[i])) changes.push('經過照時間重排');
+          if (changes.length) row[cPast] = ordered.map(p => p.text).join('；');
+          ordered.forEach(p => { if (p.ms !== null && (latestPoint === null || p.ms > latestPoint)) latestPoint = p.ms; });
+        }
+        let last = parseParallelTime_ACU(row[cLast]);
+        if (last !== null && last > now.ms) {
+          last = now.ms; row[cLast] = fmt(now.ms); changes.push('最後更新時間晚於現在，改成現在');
+        }
+        if (latestPoint !== null && (last === null || last < latestPoint)) {
+          last = latestPoint; row[cLast] = fmt(latestPoint); changes.push('最後更新時間早於經過的最新一點，改成那一點');
+        }
+        if (cNext > 0 && last !== null) {
+          const next = parseParallelTime_ACU(row[cNext]);
+          if (next !== null && next < last) { row[cNext] = fmt(last); changes.push('下次推進早於最後更新時間，改成最後更新時間'); }
+        }
+        if (changes.length) fixes.push(`「${name}」${changes.join('、')}`);
+      });
+      const reply = recallChat_ACU()[sceneEnd];
+      const header = reply && !reply.is_user ? (recallCore_ACU.messageText(reply).match(/〔\s*平行線\s*[｜|]\s*([^｜|〕]+)/) || [])[1] : '';
+      const headerMs = header ? parseParallelTime_ACU(header) : null;
+      if (headerMs !== null && headerMs > now.ms) fixes.push(`回覆裡的平行線時間 ${header.trim()} 晚於這一樓的結束時間 ${now.text}（正文沒改，可以 swipe 重寫）`);
+      if (fixes.length) {
+        logWarn_ACU('[平行線] 填表後檢查時間：', fixes);
+        showToastr_ACU('warning', `平行線時間檢查：${fixes.join('；')}`);
+      }
+      return fixes;
+    } catch (e) {
+      logWarn_ACU('[平行線] 檢查時間失敗:', e);
+      return [];
+    }
   }
   // 平行線紀錄表單獨更新、看不到紀要等表時，附上唯讀參考資料供選人與推進。
   function buildParallelReferenceText_ACU(targetSheetKeys, sceneEnd) {
@@ -25475,6 +25559,11 @@ ${extraText}
             } catch (e) {}
           });
         }
+        // [v5.3 平行線] 回覆收到或被停止：這回合結束，之後的世界書掃描不再改這回合的平行線紀錄
+        for (const parallelEndEvent of [SillyTavern_API_ACU.eventTypes.MESSAGE_RECEIVED, SillyTavern_API_ACU.eventTypes.GENERATION_STOPPED]) {
+          if (parallelEndEvent) SillyTavern_API_ACU.eventSource.on(parallelEndEvent, () => { try { endParallelTurn_ACU(); } catch (e) {} });
+        }
+
         if (SillyTavern_API_ACU.eventTypes.GENERATION_ENDED) {
             SillyTavern_API_ACU.eventSource.on(SillyTavern_API_ACU.eventTypes.GENERATION_ENDED, (message_id) => {
                 logDebug_ACU(`ACU GENERATION_ENDED event for message_id: ${message_id}`);
@@ -37546,7 +37635,11 @@ async function callCustomOpenAI_ACU(dynamicContent, abortController = null, opti
                 if (!parseSuccess) {
                     throw new Error('解析或應用AI更新時出錯');
                 }
-                
+                // [v5.3 平行線] 存檔前照這批存檔樓層的劇情時間檢查平行線紀錄表的時間
+                if (!isImportMode && saveTargetIndex >= 0 && isParallelEnabled_ACU() && modifiedKeys.includes(getParallelSheetKey_ACU())) {
+                    normalizeParallelTimes_ACU(saveTargetIndex);
+                }
+
                 blankReviewResults = reviewTableBlanks_ACU(dynamicContent.tableReviewScopes);
                 // 成功！退出重試循環
                 success = true;
